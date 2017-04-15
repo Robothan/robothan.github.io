@@ -1372,3 +1372,35 @@ pre .javascript .function {
   margin-right: 5px;
   display: inline-block;
 }
+
+/* Sidebar modules for boxing content */
+.sidebar-module {
+    padding: 15px;
+    margin: 0 -15px 15px;
+}
+
+.sidebar-module h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.sidebar-module-inset {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.sidebar-module-inset p:last-child,
+.sidebar-module-inset ul:last-child,
+.sidebar-module-inset ol:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-module-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.sidebar-module-list-child {
+    padding-left: 25px;
+}

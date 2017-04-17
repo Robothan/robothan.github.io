@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hive函数总结 | 金岩的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Hive 常用函数讲解">
+<meta name="keywords" content="Java,Hive函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive函数总结">
+<meta property="og:url" content="http://robothan.github.io/2017/04/17/Hive函数总结/index.html">
+<meta property="og:site_name" content="金岩的博客">
+<meta property="og:description" content="Hive 常用函数讲解">
+<meta property="og:updated_time" content="2017-04-17T14:19:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive函数总结">
+<meta name="twitter:description" content="Hive 常用函数讲解">
+  
+    <link rel="alternate" href="/atom.xml" title="金岩的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://robothan.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">金岩的博客</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Hive函数总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/17/Hive函数总结/" class="article-date">
+  <time datetime="2017-04-17T11:58:34.000Z" itemprop="datePublished">2017-04-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Hive/">Hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hive函数总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h3 id="1-distinct-函数"><a href="#1-distinct-函数" class="headerlink" title="1. distinct 函数"></a>1. distinct 函数</h3><pre><code>distinct 与 group by 的区别在于 当只是查看某几个字段不重复的字段值时用 distinct.
+当需要用到分组及聚合函数时，则需要用到 group by。
+举例： select distinct col1, col2 from t1 
+则会把 col1及 col2不重复的两个字段的值获取到
+</code></pre><h3 id="2-group-by-函数"><a href="#2-group-by-函数" class="headerlink" title="2. group by 函数"></a>2. group by 函数</h3><pre><code>在group by中，主要用来对某一个字段，或某些字段进行分组，以及对其他字段进行聚合统计
+</code></pre><h4 id="（1）having"><a href="#（1）having" class="headerlink" title="（1）having"></a>（1）having</h4><pre><code>having 函数主要用来过滤一些不符合条件的值
+</code></pre><h4 id="（2）count-sum"><a href="#（2）count-sum" class="headerlink" title="（2）count,sum"></a>（2）count,sum</h4><pre><code>count 用来统计分组之后字段值出现的次数
+sum 用来统计分组之后字段值的和
+</code></pre><h4 id="（3）collect-list-函数"><a href="#（3）collect-list-函数" class="headerlink" title="（3）collect_list 函数"></a>（3）collect_list 函数</h4><pre><code>collect_list 将分组之后的字段值进行全部统计，返回值为一个数组
+</code></pre><h4 id="（4）collect-set-函数"><a href="#（4）collect-set-函数" class="headerlink" title="（4）collect_set 函数"></a>（4）collect_set 函数</h4><pre><code>collect_set 将分组之后的字段值进行去重统计，返回值为一个数组
+</code></pre><h3 id="3-order-by-和-sort-by"><a href="#3-order-by-和-sort-by" class="headerlink" title="3. order by 和 sort by"></a>3. order by 和 sort by</h3><pre><code>在hive中，使用order by会引发全局排序，有可能会超过单个节点的磁盘和内存存储能力导致任务失败。
+一种替代方案是 使用 distribute by 和 sort by来进行分组排序。
+举例： select * from baidu_click order by click desc;
+     select * from baidu_click distribute by product_line sort by click desc;
+被distribute by设定的字段为KEY，数据会被HASH分发到不同的reducer机器上，然后sort by会对同一个reducer机器上的每组数据进行局部排序。
+distribute + sort的结果是按组有序而全局无序的。
+</code></pre><h3 id="4-cluster-by"><a href="#4-cluster-by" class="headerlink" title="4. cluster by"></a>4. cluster by</h3><pre><code>cluster by的功能就是 distribute by和 sort by相结合。
+cluster by指定的列只能是降序。
+</code></pre><h3 id="5-union-all-amp-union"><a href="#5-union-all-amp-union" class="headerlink" title="5. union all &amp; union"></a>5. union all &amp; union</h3><h3 id="5-case-when"><a href="#5-case-when" class="headerlink" title="5. case when"></a>5. case when</h3><pre><code>case when col1 = &apos;0&apos; then 1 else 0 end
+含义：当字段值等于0的时候返回1，否则返回0
+</code></pre><h3 id="6-join-语法"><a href="#6-join-语法" class="headerlink" title="6. join 语法"></a>6. join 语法</h3><pre><code>join on
+left outer join
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://robothan.github.io/2017/04/17/Hive函数总结/" data-id="cj1m7i82h0000yquqqr3y6snr" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hive函数/">Hive函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/15/Java单例讲解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          Java单例讲解
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-distinct-函数"><span class="toc-number">1.</span> <span class="toc-text">1. distinct 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-group-by-函数"><span class="toc-number">2.</span> <span class="toc-text">2. group by 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#（1）having"><span class="toc-number">2.1.</span> <span class="toc-text">（1）having</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（2）count-sum"><span class="toc-number">2.2.</span> <span class="toc-text">（2）count,sum</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（3）collect-list-函数"><span class="toc-number">2.3.</span> <span class="toc-text">（3）collect_list 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（4）collect-set-函数"><span class="toc-number">2.4.</span> <span class="toc-text">（4）collect_set 函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-order-by-和-sort-by"><span class="toc-number">3.</span> <span class="toc-text">3. order by 和 sort by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-cluster-by"><span class="toc-number">4.</span> <span class="toc-text">4. cluster by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-union-all-amp-union"><span class="toc-number">5.</span> <span class="toc-text">5. union all & union</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-case-when"><span class="toc-number">6.</span> <span class="toc-text">5. case when</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-join-语法"><span class="toc-number">7.</span> <span class="toc-text">6. join 语法</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+
+  
+    
+
+  
+    
+
+  
+    
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 JackShang&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;jinyanneuq@163.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+    
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

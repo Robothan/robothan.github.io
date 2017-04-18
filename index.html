@@ -93,13 +93,13 @@
       
         <!-- Table of Contents -->
         
-        <h3 id="1-distinct-函数"><a href="#1-distinct-函数" class="headerlink" title="1. distinct 函数"></a>1. distinct 函数</h3><pre><code>distinct 与 group by 的区别在于 当只是查看某几个字段不重复的字段值时用 distinct.
+        <h3 id="distinct-函数"><a href="#distinct-函数" class="headerlink" title="distinct 函数"></a>distinct 函数</h3><pre><code>distinct 与 group by 的区别在于 当只是查看某几个字段不重复的字段值时用 distinct.
 当需要用到分组及聚合函数时，则需要用到 group by。
 举例： select distinct col1, col2 from t1 
 则会把 col1及 col2不重复的两个字段的值获取到
 </code></pre><h3 id="2-group-by-函数"><a href="#2-group-by-函数" class="headerlink" title="2. group by 函数"></a>2. group by 函数</h3><pre><code>在group by中，主要用来对某一个字段，或某些字段进行分组，以及对其他字段进行聚合统计
 </code></pre><h4 id="（1）having"><a href="#（1）having" class="headerlink" title="（1）having"></a>（1）having</h4><pre><code>having 函数主要用来过滤一些不符合条件的值
-</code></pre><h4 id="（2）count-sum"><a href="#（2）count-sum" class="headerlink" title="（2）count,sum"></a>（2）count,sum</h4><pre><code>count 用来统计分组之后字段值出现的次数
+</code></pre><h4 id="（2）count-sum-avg-min-max"><a href="#（2）count-sum-avg-min-max" class="headerlink" title="（2）count,sum,avg,min,max"></a>（2）count,sum,avg,min,max</h4><pre><code>count 用来统计分组之后字段值出现的次数
 sum 用来统计分组之后字段值的和
 </code></pre><h4 id="（3）collect-list-函数"><a href="#（3）collect-list-函数" class="headerlink" title="（3）collect_list 函数"></a>（3）collect_list 函数</h4><pre><code>collect_list 将分组之后的字段值进行全部统计，返回值为一个数组
 </code></pre><h4 id="（4）collect-set-函数"><a href="#（4）collect-set-函数" class="headerlink" title="（4）collect_set 函数"></a>（4）collect_set 函数</h4><pre><code>collect_set 将分组之后的字段值进行去重统计，返回值为一个数组
@@ -111,15 +111,52 @@ sum 用来统计分组之后字段值的和
 distribute + sort的结果是按组有序而全局无序的。
 </code></pre><h3 id="4-cluster-by"><a href="#4-cluster-by" class="headerlink" title="4. cluster by"></a>4. cluster by</h3><pre><code>cluster by的功能就是 distribute by和 sort by相结合。
 cluster by指定的列只能是降序。
-</code></pre><h3 id="5-union-all-amp-union"><a href="#5-union-all-amp-union" class="headerlink" title="5. union all &amp; union"></a>5. union all &amp; union</h3><h3 id="5-case-when"><a href="#5-case-when" class="headerlink" title="5. case when"></a>5. case when</h3><pre><code>case when col1 = &apos;0&apos; then 1 else 0 end
+</code></pre><h3 id="5-union-all-amp-union"><a href="#5-union-all-amp-union" class="headerlink" title="5. union all &amp; union"></a>5. union all &amp; union</h3><pre><code>union 和 union all关键字都是讲两个结果集合并为一个：
+（1）对重复结果的处理： UNION在进行表链接后会筛选掉重复的记录，Union ALl不会去除重复记录。
+（2）对排序的处理：Union将会按照字段的顺序进行排序； Union All只是简单的将两个结果合并后就返回。
+</code></pre><h3 id="6-case-when"><a href="#6-case-when" class="headerlink" title="6. case when"></a>6. case when</h3><pre><code>case when col1 = &apos;0&apos; then 1 else 0 end
 含义：当字段值等于0的时候返回1，否则返回0
-</code></pre><h3 id="6-join-语法"><a href="#6-join-语法" class="headerlink" title="6. join 语法"></a>6. join 语法</h3><pre><code>join on
+</code></pre><h3 id="7-join-语法"><a href="#7-join-语法" class="headerlink" title="7. join 语法"></a>7. join 语法</h3><pre><code>join on
 left outer join
+full outer join
+</code></pre><h3 id="8-string函数"><a href="#8-string函数" class="headerlink" title="8. string函数"></a>8. string函数</h3><pre><code>character_length(string str)
+concat(str1, str2, str3)
+concat_ws(&quot;,&quot;, str1, str2)
+lower(string A)
+regexp_replace(string str, string PATTERN, string REPLACEMENT)
+repeat(string str, int n)
+repalce(string A, string old, string new)
+split(&quot;&quot;)
+regexp
+rlike
+like
+</code></pre><h3 id="9-日期函数"><a href="#9-日期函数" class="headerlink" title="9. 日期函数"></a>9. 日期函数</h3><pre><code>from_unixtime()
+unix_timestamp()  unix时间戳
+unix_timstamp(string date)
+year(string date)
+month(string date)
+day(string date)
+hour(string date)
+minute(string date)
+second(string date)
+weekofyear(string date) 举例：weekofyear(&quot;1970-11-01 00:00:00&quot;) = 44, weekofyear(&quot;1970-11-01&quot;) = 44.
+datediff(string enddate, string startdate)  举例: datediff(&apos;2009-03-01&apos;, &apos;2009-02-27&apos;) = 2
+current_date
+trunc(string date, string format)  举例： trunc(&quot;2015-03-17&quot;, &quot;MM&quot;) = 2015-03-01
+date_format(date/timestamp/string ts, string fmt) 举例： date_format(&apos;2015-04-08&apos;, &apos;y&apos;) = 2015
+last_day(string date) 举例：
+next_day(string start_date, string day_of_week)  举例：next_day(&apos;2015-01-14&apos;, &apos;TU&apos;) = 2015-01-20.
+</code></pre><h3 id="10-条件函数"><a href="#10-条件函数" class="headerlink" title="10. 条件函数"></a>10. 条件函数</h3><pre><code>if(boolean testCondition, T valueTrue, T valueFalseOrNull) 举例：条件， 真值，为假时的值
+isnull(a)
+isnotnull(a)
+nvl(T value, T default_value)
+case when a then b else c end
+nullif(a, b)
 </code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/17/Hive函数总结/" data-id="cj1m7i82h0000yquqqr3y6snr" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/17/Hive函数总结/" data-id="cj1nmwnb20000uuuq0qeqrq3f" class="article-share-link">分享</a>
       
       
       
@@ -161,13 +198,13 @@ left outer join
       
         <!-- Table of Contents -->
         
-        <p>本文主要讲解23中设计模式中的单例模式，使用单例模式有很多种方式，有饿汉式，有懒汉式。<br>下面分别讲解着两种方式的单例模式的实现及应用场景。</p>
+        <p>本文主要讲解23中设计模式中的单例模式，单例模式是指在一个进程当中，有且只有一个类的实例，并且提供此实例的访问方法。单例模式有很多种实现方式，有饿汉式，有懒汉式。<br>下面分别讲解着两种方式的单例模式的实现及应用场景。</p>
 <h3 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h3><p>饿汉式编程是指在当类在加载的过程中中即实现类此的实例化，并且将引用赋予到类的实例上。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/15/Java单例讲解/" data-id="cj1m7i83h0007yququr6jui1b" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/15/Java单例讲解/" data-id="cj1nmwnb70001uuuq6y15gzwp" class="article-share-link">分享</a>
       
       
       
@@ -218,7 +255,7 @@ left outer join
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/14/hello-world/" data-id="cj1m7i83m0008yquqwnkxmsqx" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/14/hello-world/" data-id="cj1nmwnbg0004uuuqzlfir2fp" class="article-share-link">分享</a>
       
       
       

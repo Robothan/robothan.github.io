@@ -65,6 +65,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-代理模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/04/代理模式/" class="article-date">
+  <time datetime="2017-05-04T14:51:53.000Z" itemprop="datePublished">2017-05-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/04/代理模式/">代理模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>###代理模式<br>代理模式是对真实对象的封装，当需要访问真实对象时，我们会去调用代理对象，在代理对象中做一些操作，以及对真是对象的方法进行调用。这个代理对象的一些操作就是我们可以随意发挥的了。某些可以统一抽取出来的与业务无关的公共模块也可以在里面执行了。极大的丰富的语言的简洁性，可扩展性。</p>
+<h3 id="反射-Reflection-与动态代理"><a href="#反射-Reflection-与动态代理" class="headerlink" title="反射 (Reflection)与动态代理"></a>反射 (Reflection)与动态代理</h3><p>java通过在 java.lang.reflect库中提供了三个类直接支持代理模式：Proxy， InvocationHandler和 Method<br>Proxy类使得设计师能够在运行时间创建代理对象。</p>
+<p>当系统中有了一个代理对象后，对原对象的方法调用会首先分派给一个调用处理器(Invocation Handler).<br>程序可以再调用处理器的invoke（）方法中截获这个调用</p>
+<p>设计师可以按照下面的步骤创建动态代理对象：<br>（1）指明一系列的接口来创建一个代理对象<br>（2）创建一个调用处理器（Invocation Handler)对象<br>（3）将这个代理指定为某个其他对象的代理对象<br>（4）在调用处理器的invoke()方法中采取代理，一方面将调用传递给真实对象，另一方面执行各种需要的操作。</p>
+<h3 id="编程实例"><a href="#编程实例" class="headerlink" title="编程实例"></a>编程实例</h3><p>下面给出一个代理模式的实例，通过这个实例来感受下Java反射的代理类编写：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VectorProxy</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Object proxyObj;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">VectorProxy</span><span class="params">(Object object)</span></span>&#123;</div><div class="line">        proxyObj = object;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     *  静态工厂方法</div><div class="line">     * <span class="doctag">@param</span> obj</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">factory</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        Class cls = obj.getClass();</div><div class="line"></div><div class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(cls.getClassLoader(), cls.getInterfaces(), <span class="keyword">new</span> VectorProxy(obj));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        System.out.println(<span class="string">"before calling"</span> + method);</div><div class="line">        <span class="keyword">if</span>(args != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;args.length; i++)&#123;</div><div class="line">                System.out.println(args[i] + <span class="string">""</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        Object o = method.invoke(proxyObj, args);</div><div class="line">        System.out.println(<span class="string">"after calling "</span> + method);</div><div class="line">        <span class="keyword">return</span> o;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List v = <span class="keyword">null</span>;</div><div class="line">        v = (List) factory(<span class="keyword">new</span> Vector(<span class="number">10</span>));</div><div class="line">        v.add(<span class="string">"New"</span>);</div><div class="line">        v.add(<span class="string">"York"</span>);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最重要的一步为：Proxy.newProxyInstance(cls.getClassLoader(), cls.getInterfaces(), new VectorProxy(obj)); 由此，当调用实际对象的时候，都其实调用的为invoke()方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://robothan.github.io/2017/05/04/代理模式/" data-id="cj2j3cs0s00051wuqap8ln7r8" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-模板模式" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/04/模板模式/" class="article-date">
@@ -102,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/05/04/模板模式/" data-id="cj2aifz1100057auqmy8ckevl" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/05/04/模板模式/" data-id="cj2j3cs0y00091wuqtb0j2f5y" class="article-share-link">分享</a>
       
       
       
@@ -154,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/18/策略模式/" data-id="cj2aifz1400067auqvna37vin" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/18/策略模式/" data-id="cj2j3cs0w00061wuqcy2irm16" class="article-share-link">分享</a>
       
       
       
@@ -259,7 +311,7 @@ nullif(a, b)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/17/Hive函数总结/" data-id="cj2aifz0k00007auq0uut30uq" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/17/Hive函数总结/" data-id="cj2j3cs0j00011wuq0gm5cuxx" class="article-share-link">分享</a>
       
       
       
@@ -312,7 +364,7 @@ nullif(a, b)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/15/Java单例讲解/" data-id="cj2aifz0y00047auquh9onvl0" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/15/Java单例讲解/" data-id="cj2j3cs0d00001wuqg4j7l54z" class="article-share-link">分享</a>
       
       
       
@@ -363,7 +415,7 @@ nullif(a, b)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/04/14/hello-world/" data-id="cj2aifz0p00017auqxnlk3fqy" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/04/14/hello-world/" data-id="cj2j3cs0p00041wuqtc6op97n" class="article-share-link">分享</a>
       
       
       
@@ -407,7 +459,7 @@ nullif(a, b)
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -417,7 +469,7 @@ nullif(a, b)
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Hive函数/" style="font-size: 14px; color: #00f">Hive函数</a> <a href="/tags/Java/" style="font-size: 25px; color: #ee82ee">Java</a> <a href="/tags/模板模式/" style="font-size: 14px; color: #00f">模板模式</a> <a href="/tags/策略模式/" style="font-size: 14px; color: #00f">策略模式</a> <a href="/tags/设计模式/" style="font-size: 19.5px; color: #7741f7">设计模式</a>
+      <a href="/tags/Hive函数/" style="font-size: 14px; color: #00f">Hive函数</a> <a href="/tags/Java/" style="font-size: 25px; color: #ee82ee">Java</a> <a href="/tags/代理模式/" style="font-size: 14px; color: #00f">代理模式</a> <a href="/tags/模板模式/" style="font-size: 14px; color: #00f">模板模式</a> <a href="/tags/策略模式/" style="font-size: 14px; color: #00f">策略模式</a> <a href="/tags/设计模式/" style="font-size: 19.5px; color: #7741f7">设计模式</a>
     </div>
   </div>
 
@@ -427,6 +479,10 @@ nullif(a, b)
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/05/04/代理模式/">代理模式</a>
+          </li>
         
           <li>
             <a href="/2017/05/04/模板模式/">模板模式</a>
@@ -442,10 +498,6 @@ nullif(a, b)
         
           <li>
             <a href="/2017/04/15/Java单例讲解/">Java单例讲解</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/14/hello-world/">Hello World</a>
           </li>
         
       </ul>
@@ -478,7 +530,7 @@ nullif(a, b)
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">4</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">4</span></li></ul>
     </div>
   </div>
 

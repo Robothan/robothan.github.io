@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://robothan.github.io/2017/05/04/代理模式/index.html">
 <meta property="og:site_name" content="金岩的博客">
 <meta property="og:description" content="Java代理模式">
-<meta property="og:updated_time" content="2017-05-10T14:38:27.000Z">
+<meta property="og:updated_time" content="2017-05-10T14:42:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="代理模式">
 <meta name="twitter:description" content="Java代理模式">
@@ -96,7 +96,7 @@
       
         <!-- Table of Contents -->
         
-        <p>###代理模式<br>代理模式是对真实对象的封装，当需要访问真实对象时，我们会去调用代理对象，在代理对象中做一些操作，以及对真是对象的方法进行调用。这个代理对象的一些操作就是我们可以随意发挥的了。某些可以统一抽取出来的与业务无关的公共模块也可以在里面执行了。极大的丰富的语言的简洁性，可扩展性。</p>
+        <p>代理模式是对真实对象的封装，当需要访问真实对象时，我们会去调用代理对象，在代理对象中做一些操作，以及对真是对象的方法进行调用。这个代理对象的一些操作就是我们可以随意发挥的了。某些可以统一抽取出来的与业务无关的公共模块也可以在里面执行了。极大的丰富的语言的简洁性，可扩展性。</p>
 <h3 id="反射-Reflection-与动态代理"><a href="#反射-Reflection-与动态代理" class="headerlink" title="反射 (Reflection)与动态代理"></a>反射 (Reflection)与动态代理</h3><p>java通过在 java.lang.reflect库中提供了三个类直接支持代理模式：Proxy， InvocationHandler和 Method<br>Proxy类使得设计师能够在运行时间创建代理对象。</p>
 <p>当系统中有了一个代理对象后，对原对象的方法调用会首先分派给一个调用处理器(Invocation Handler).<br>程序可以再调用处理器的invoke（）方法中截获这个调用</p>
 <p>设计师可以按照下面的步骤创建动态代理对象：<br>（1）指明一系列的接口来创建一个代理对象<br>（2）创建一个调用处理器（Invocation Handler)对象<br>（3）将这个代理指定为某个其他对象的代理对象<br>（4）在调用处理器的invoke()方法中采取代理，一方面将调用传递给真实对象，另一方面执行各种需要的操作。</p>
@@ -106,7 +106,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://robothan.github.io/2017/05/04/代理模式/" data-id="cj2j3cs0s00051wuqap8ln7r8" class="article-share-link">分享</a>
+      <a data-url="http://robothan.github.io/2017/05/04/代理模式/" data-id="cj2j3nugg00062yuqnbki832p" class="article-share-link">分享</a>
       
       
       
